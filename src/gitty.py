@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from subprocess import run as RUN, CompletedProcess, PIPE
 
 import gi
 
@@ -25,3 +26,28 @@ gi.require_version("Adw", "1")
 
 APP_ID = "io.gitty.Gitty"
 APP_NAME = "Gitty"
+
+
+def git_run(
+        repo: str, *args: str, check: bool = True
+    ) -> CompletedProcess[str]:
+    """Run Git without a shell, so paths and commit messages
+    are not shell-expanded."""
+    result = RUN(
+        ["git", "-C", repo, *args],
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        stdout=PIPE,
+        stderr=PIPE,
+        check=False,
+    )
+    if check and result.returncode != 0:
+        raise RuntimeError(
+            (
+                result.stderr.strip() or
+                result.stdout.strip() or
+                "Git command failed."
+            )
+        )
+    return result
