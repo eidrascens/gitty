@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from subprocess import run as RUN, CompletedProcess, PIPE
+from os.path import realpath
 
 import gi
 
@@ -51,3 +52,30 @@ def git_run(
             )
         )
     return result
+
+
+def find_repo_root(path: str) -> str:
+    result = RUN(
+        [
+            "git",
+            "-C",
+            path,
+            "rev-parse",
+            "--show-toplevel"
+        ],
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        stdout=PIPE,
+        stderr=PIPE,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            result.stderr.strip() or
+            "%s is not a Git Repository" % (
+                path
+            )
+        )
+    return realpath(result.stdout.strip())
+
