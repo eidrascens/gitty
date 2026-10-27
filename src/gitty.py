@@ -19,10 +19,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+from typing import Self, Optional
 import gi
+
+from gi.repository import Adw, Gtk
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
 APP_ID = "io.gitty.Gitty"
 APP_NAME = "Gitty"
+
+
+class GittyApp(Adw.Application):
+    def __init__(self: Self) -> None:
+        super().__init__(application_id=APP_ID)
+        self.window: Optional[Adw.ApplicationWindow] = None
+        self.file_rows: list[dict[str, object]] = []
+        self._chooser: Optional[Gtk.FileChooserNative] = None
