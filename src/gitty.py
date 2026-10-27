@@ -51,3 +51,19 @@ class GittyApp(Adw.Application):
         self.window.connect(
             "close-request", self._on_close_request
         )
+
+
+        self.error_label = Gtk.Label(label="")
+        self.error_label.set_xalign(0)
+        self.error_label.set_wrap(True)
+        self.error_label.add_css_class("error")
+        self.error_label.set_visible(False)
+        root.append(self.error_label)
+
+
+    def _show_error(self: Self, message: str) -> None:
+        if not self.window or not hasattr(self, "error_label"):
+            return
+
+        self.error_label.set_text(message[:1800])
+        self.error_label.set_visible(True)
