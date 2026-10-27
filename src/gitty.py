@@ -19,10 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+from pathlib import Path
 from typing import Self, Optional
 import gi
 
-from gi.repository import Adw, Gtk
+from gi.repository import Adw, Gtk, GLib
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -37,3 +38,6 @@ class GittyApp(Adw.Application):
         self.window: Optional[Adw.ApplicationWindow] = None
         self.file_rows: list[dict[str, object]] = []
         self._chooser: Optional[Gtk.FileChooserNative] = None
+        self.CONF: Path = Path(
+                GLib.get_user_config_dir()
+            ) / "git-commit-popup" / "config.json"
