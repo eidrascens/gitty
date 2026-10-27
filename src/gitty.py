@@ -125,3 +125,8 @@ def read_changed_files(repo: str) -> list[tuple[str, str]]:
     return sorted(
         entries, key=lambda item: item[0].casefold()
     )
+
+
+def literal_pathspec(path: str) -> str:
+    """Make a Git pathspec literal"""
+    return ":(literal)" + path
