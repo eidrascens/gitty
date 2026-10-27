@@ -42,3 +42,12 @@ class GittyApp(Adw.Application):
         self.CONF: Path = Path(
                 GLib.get_user_config_dir()
             ) / "git-commit-popup" / "config.json"
+    def _build_window(self: Self) -> None:
+        self.window = Adw.ApplicationWindow(
+                application=self, title=self.APP_NAME
+            )
+        self.window.set_default_size(560, 290)
+        self.window.set_resizable(False)
+        self.window.connect(
+            "close-request", self._on_close_request
+        )
